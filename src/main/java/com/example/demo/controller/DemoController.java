@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import com.example.demo.model.TestModel;
 import com.example.demo.service.KafkaProducerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -14,10 +16,13 @@ public class DemoController {
     KafkaProducerService kafkaSender;
 
     @PostMapping(value = "/producer")
-    public String producer(@RequestBody TestModel message) {
-        kafkaSender.send(message);
+    public ResponseEntity<String> producer(@RequestBody TestModel message) {
+        boolean result = kafkaSender.send(message);
 
-        return "Message sent to the Kafka Topic java_in_use_topic Successfully";
-    }
+        if (result) {
+            return ResponseEntity.ok("Message sent successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send message");
+        }    }
 
 }

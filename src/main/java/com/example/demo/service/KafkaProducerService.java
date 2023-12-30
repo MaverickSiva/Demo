@@ -22,8 +22,9 @@ public class KafkaProducerService {
         this.createTestModelKafkaTemplate = createTestModelKafkaTemplate;
     }
 
-    public void send(TestModel message) {
+    public boolean send(TestModel message) {
         createTestModelKafkaTemplate.send(kafkaTopic, message);
+        return true;
     }
 
     @Bean
